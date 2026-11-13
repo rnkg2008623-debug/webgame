@@ -1,6 +1,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; background: #1a1726; color: #1d1a2b; font-family: "Noto Serif JP", serif; }
-body { background: radial-gradient(ellipse at 30% 40%, #e4def5 0%, #a9a0c4 45%, #2b2638 100%); }
+body { background: url("../assets/bg2.webp") center / cover no-repeat, url("../assets/bg1.webp") center / cover no-repeat, #2b2638; }
 #bg { opacity: 0; transition: opacity .6s; position: fixed; inset: 0; width: 100%; height: 100%; }
 #viewport { position: fixed; inset: 0; display: grid; place-items: center; }
 #stage { position: relative; width: 1672px; height: 941px; flex: none; transform: scale(var(--s, 1)); transform-origin: center; }
