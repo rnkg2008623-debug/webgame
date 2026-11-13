@@ -1,4 +1,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
-body { font-family: system-ui, sans-serif; background: #fff; color: #222; }
-#app { min-height: 100%; }
+body { font-family: system-ui, sans-serif; background: #0f1226; color: #f2f2f7; }
+#app { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
+canvas { width: 100%; max-width: 480px; aspect-ratio: 3/2; background: #1b2047; border-radius: 12px; touch-action: manipulation; }
+button { font-size: 1rem; padding: 10px 28px; border: 0; border-radius: 8px; background: #ffd24a; color: #222; cursor: pointer; }
+.note { opacity: .7; font-size: .9rem; }

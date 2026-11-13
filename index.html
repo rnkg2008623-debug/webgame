@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>New Web Game</title>
+  <title>テストゲーム - 星をつかめ!</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main id="app"></main>
+  <main id="app">
+    <h1>星をつかめ!</h1>
+    <p class="hud">スコア: <span id="score">0</span> / 残り <span id="time">30</span>秒</p>
+    <canvas id="game" width="480" height="320"></canvas>
+    <button id="start">スタート</button>
+    <p class="note">出てくる★をクリック/タップしよう。</p>
+  </main>
   <script src="js/main.js"></script>
 </body>
 </html>
