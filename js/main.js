@@ -1,46 +1,45 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('game');
-  const ctx = canvas.getContext('2d');
-  const scoreEl = document.getElementById('score');
-  const timeEl = document.getElementById('time');
-  const startBtn = document.getElementById('start');
-  let score, timeLeft, star, running = false, timer;
+  const stage = document.getElementById('stage');
+  const toast = document.getElementById('toast');
+  const items = [...document.querySelectorAll('.item')];
+  const names = { persona: 'ペルソナ', equip: '装備', skills: 'スキル', status: 'ステータス', party: 'パーティ', requests: '依頼', calendar: 'カレンダー', system: 'システム' };
 
-  function spawn() {
-    star = { x: 30 + Math.random() * (canvas.width - 60), y: 30 + Math.random() * (canvas.height - 60), r: 22 };
-  }
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!running) return;
-    ctx.font = star.r * 2 + 'px serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('⭐', star.x, star.y);
-  }
-  function end() {
-    running = false; clearInterval(timer); draw();
-    ctx.fillStyle = '#fff'; ctx.font = '28px system-ui'; ctx.textAlign = 'center';
-    ctx.fillText('終了! スコア ' + score, canvas.width / 2, canvas.height / 2);
-    startBtn.textContent = 'もう一度';
-  }
-  function start() {
-    score = 0; timeLeft = 30; running = true;
-    scoreEl.textContent = score; timeEl.textContent = timeLeft;
-    spawn(); draw();
-    clearInterval(timer);
-    timer = setInterval(() => {
-      timeEl.textContent = --timeLeft;
-      if (timeLeft <= 0) end();
-    }, 1000);
-  }
-  canvas.addEventListener('pointerdown', e => {
-    if (!running) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * canvas.width / rect.width;
-    const y = (e.clientY - rect.top) * canvas.height / rect.height;
-    if (Math.hypot(x - star.x, y - star.y) <= star.r * 1.3) {
-      scoreEl.textContent = ++score; spawn(); draw();
-    }
+  // 1672x941 のステージを画面に合わせて拡縮
+  const fit = () => stage.style.setProperty('--s', Math.min(innerWidth / 1672, innerHeight / 941));
+  addEventListener('resize', fit); fit();
+
+  // パーティ表示
+  const members = [
+    { lv: 38, hp: 412, sp: 208, cls: '' },
+    { lv: 37, hp: 398, sp: 220, cls: 'k' },
+    { lv: 36, hp: 348, sp: 198, cls: '' },
+  ];
+  document.getElementById('party').innerHTML = members.map(m => `
+    <div class="member"><div class="shape"></div><div class="face ${m.cls}"></div>
+      <div class="lv"><small>Lv.</small>${m.lv}</div>
+      <div class="bar hp">HP <span>${m.hp} / ${m.hp}</span></div>
+      <div class="bar sp">SP <span>${m.sp} / ${m.sp}</span></div></div>`).join('');
+
+  // 選択・決定
+  let sel = 0;
+  const select = i => { sel = (i + items.length) % items.length; items.forEach((el, k) => el.classList.toggle('sel', k === sel)); };
+  let timer;
+  const say = msg => { toast.textContent = msg; toast.classList.add('show'); clearTimeout(timer); timer = setTimeout(() => toast.classList.remove('show'), 1400); };
+  const decide = i => say('決定: ' + names[items[i].dataset.id]);
+  items.forEach((el, i) => {
+    el.addEventListener('mouseenter', () => select(i));
+    el.addEventListener('click', () => { select(i); decide(i); });
   });
-  startBtn.addEventListener('click', start);
+  addEventListener('keydown', e => {
+    const k = e.key.toLowerCase();
+    if (k === 'arrowright' || k === 'arrowdown') select(sel + 1);
+    else if (k === 'arrowleft' || k === 'arrowup') select(sel - 1);
+    else if (k === 'z' || k === 'enter') decide(sel);
+    else if (k === 'x') say('戻る');
+    else if (k === 'c') say('メニューガイド');
+  });
+  select(0);
+
+  window.startBackground();
 });

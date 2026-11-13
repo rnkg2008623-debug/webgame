@@ -1,7 +1,62 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body { font-family: system-ui, sans-serif; background: #0f1226; color: #f2f2f7; }
-#app { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
-canvas { width: 100%; max-width: 480px; aspect-ratio: 3/2; background: #1b2047; border-radius: 12px; touch-action: manipulation; }
-button { font-size: 1rem; padding: 10px 28px; border: 0; border-radius: 8px; background: #ffd24a; color: #222; cursor: pointer; }
-.note { opacity: .7; font-size: .9rem; }
+html, body { height: 100%; overflow: hidden; background: #1a1726; color: #1d1a2b; font-family: "Noto Serif JP", serif; }
+body { background: radial-gradient(ellipse at 30% 40%, #e4def5 0%, #a9a0c4 45%, #2b2638 100%); }
+#bg { opacity: 0; transition: opacity .6s; position: fixed; inset: 0; width: 100%; height: 100%; }
+#viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+#stage { position: relative; width: 1672px; height: 941px; flex: none; transform: scale(var(--s, 1)); transform-origin: center; }
+
+:root { --violet: #b79cff; --ink: #1c1a28; --paper: #f4f1fb; }
+
+#character { position: absolute; left: 0; top: 0; height: 100%; width: auto; object-fit: contain; pointer-events: none; }
+#menu-label { position: absolute; left: 45px; top: 18px; color: #f3f0fb; font: 500 30px "Cormorant Garamond", serif; letter-spacing: .35em; }
+#menu-label i { letter-spacing: 0; opacity: .8; }
+#location { position: absolute; left: 30px; top: 105px; display: flex; gap: 8px; color: #f3f0fb; font: italic 500 22px/1.15 "Cormorant Garamond", serif; }
+
+#date { position: absolute; left: 1330px; top: 10px; width: 330px; height: 140px; color: var(--ink); filter: drop-shadow(0 0 8px rgba(255,255,255,.4)); }
+#date .shape { position: absolute; inset: 0; background: var(--paper); clip-path: polygon(6% 0, 100% 4%, 94% 100%, 0 92%, 10% 55%); }
+#date .d { position: absolute; left: 60px; top: 14px; font: italic 500 40px "Cormorant Garamond", serif; white-space: nowrap; }
+#date .d b { font-size: 68px; font-weight: 500; }
+#date .wd { font-size: 28px; margin-left: 12px; }
+#date .sun { font-style: normal; font-size: 40px; margin-left: 10px; vertical-align: 6px; }
+#date .t { position: absolute; right: 50px; bottom: 14px; font-size: 34px; font-weight: 600; letter-spacing: .1em; }
+
+/* menu items */
+.item { position: absolute; border: 0; background: none; cursor: pointer; font: inherit; color: inherit; transition: transform .18s, filter .18s; filter: drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
+.item .shape { position: absolute; inset: 0; background: var(--paper); clip-path: polygon(0 12%, 98% 0, 100% 86%, 6% 100%); }
+.item.dark .shape { background: linear-gradient(135deg, #2a2638, #14121d); }
+.item.oval .shape { clip-path: ellipse(50% 50%); border: 0; }
+.item.paper .shape { clip-path: polygon(14% 0, 100% 8%, 96% 100%, 0 90%); }
+.item.light .shape { clip-path: polygon(0 18%, 94% 0, 100% 70%, 92% 100%, 4% 94%); }
+.item.dark { color: #f6f3ff; }
+.item .lbl { position: relative; z-index: 1; display: grid; grid-template-columns: auto auto; grid-template-areas: "ic en" "ic jp"; align-items: center; justify-content: center; column-gap: 14px; height: 100%; padding-left: 20px; text-align: left; }
+.item .lbl svg { grid-area: ic; width: 52px; height: 52px; }
+.item .lbl em { grid-area: en; font: italic 700 48px/1 "Cormorant Garamond", serif; }
+.item .lbl small { grid-area: jp; font-size: 18px; opacity: .8; letter-spacing: .15em; padding-left: 10px; }
+.item .lbl.big { display: block; padding: 28px 0 0 36px; }
+.item .lbl.big small { display: block; padding: 0 0 0 60px; }
+.item .lbl.big em { font-size: 86px; font-weight: 500; }
+.item .lbl:not(:has(svg)) { grid-template-areas: "en" "jp"; }
+.item.sel, .item:hover { transform: scale(1.06) rotate(-1deg); filter: drop-shadow(0 0 14px var(--violet)) drop-shadow(0 0 4px #fff); z-index: 3; }
+.item:focus-visible { outline: none; }
+#bg.on { opacity: 1; }
+#persona-art { position: absolute; left: 850px; top: 165px; width: 320px; height: 235px; clip-path: polygon(14% 0, 100% 8%, 82% 100%, 0 88%); background: radial-gradient(circle at 60% 40%, #c9b4ff 0, #4a3b78 40%, #1a1626 80%); opacity: .85; pointer-events: none; }
+
+/* party */
+#party-title { position: absolute; left: 1370px; top: 222px; color: #f3f0fb; font: italic 500 28px "Cormorant Garamond", serif; letter-spacing: .25em; }
+#party { position: absolute; left: 1250px; top: 265px; width: 410px; display: flex; flex-direction: column; gap: 14px; }
+.member { position: relative; height: 112px; color: #f3f0fb; filter: drop-shadow(0 0 6px rgba(0,0,0,.4)); }
+.member .shape { position: absolute; inset: 0; background: linear-gradient(100deg, #221f30 0%, #3a3350 100%); clip-path: polygon(0 10%, 100% 0, 100% 90%, 3% 100%); }
+.member .face { position: absolute; left: 20px; top: 8px; width: 180px; height: 96px; clip-path: polygon(0 10%, 100% 0, 92% 100%, 0 95%); background: linear-gradient(135deg, #ddd5f2, #8f84b3); }
+.member .face.k { background: linear-gradient(135deg, #5a5370, #17141f); }
+.member .lv { position: absolute; left: 255px; top: 12px; font: italic 500 36px "Cormorant Garamond", serif; }
+.member .lv small { font-size: 18px; margin-right: 4px; }
+.member .bar { position: absolute; left: 250px; width: 150px; font-size: 14px; display: flex; justify-content: space-between; border-bottom: 3px solid rgba(255,255,255,.35); }
+.member .bar.hp { top: 56px; } .member .bar.sp { top: 82px; border-color: var(--violet); }
+.member .bar span { font-family: "Cormorant Garamond", serif; font-weight: 700; font-size: 18px; }
+
+#keys { position: absolute; left: 0; bottom: 0; width: 100%; height: 62px; display: flex; align-items: center; gap: 56px; padding-left: 52px; background: linear-gradient(90deg, rgba(20,18,30,.85) 0, rgba(20,18,30,.5) 40%, transparent 70%); color: #f3f0fb; font-size: 18px; }
+#keys kbd { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 10px; background: var(--violet); color: #1c1a28; border-radius: 4px; font: 600 16px "Noto Serif JP", serif; }
+#toast { position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); padding: 10px 32px; background: rgba(20,18,30,.85); color: #fff; border: 1px solid var(--violet); font-size: 22px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+#toast.show { opacity: 1; }
+
+.item[data-id=persona] { z-index: 2; }
