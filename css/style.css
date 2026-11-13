@@ -7,7 +7,7 @@ body { background: radial-gradient(ellipse at 30% 40%, #e4def5 0%, #a9a0c4 45%, 
 
 :root { --violet: #b79cff; --ink: #1c1a28; --paper: #f4f1fb; }
 
-#character { position: absolute; left: 0; top: 0; height: 100%; width: auto; object-fit: contain; pointer-events: none; }
+#character { position: absolute; left: -170px; top: 20px; height: 960px; width: auto; pointer-events: none; z-index: 0; filter: drop-shadow(0 0 24px rgba(183,156,255,.35)); -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent 100%); mask-image: linear-gradient(90deg, #000 70%, transparent 100%); }
 #menu-label { position: absolute; left: 45px; top: 18px; color: #f3f0fb; font: 500 30px "Cormorant Garamond", serif; letter-spacing: .35em; }
 #menu-label i { letter-spacing: 0; opacity: .8; }
 #location { position: absolute; left: 30px; top: 105px; display: flex; gap: 8px; color: #f3f0fb; font: italic 500 22px/1.15 "Cormorant Garamond", serif; }
@@ -60,3 +60,4 @@ body { background: radial-gradient(ellipse at 30% 40%, #e4def5 0%, #a9a0c4 45%, 
 #toast.show { opacity: 1; }
 
 .item[data-id=persona] { z-index: 2; }
+#menu-label, #location { z-index: 2; text-shadow: 0 0 6px #1c1a28, 0 0 14px #1c1a28, 0 0 22px #1c1a28; }
