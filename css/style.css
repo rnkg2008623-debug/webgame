@@ -2,12 +2,12 @@
 html, body { height: 100%; overflow: hidden; background: #1a1726; color: #1d1a2b; font-family: "Noto Serif JP", serif; }
 body { background: url("../assets/bg2.webp") center / cover no-repeat, url("../assets/bg1.webp") center / cover no-repeat, #2b2638; }
 #bg { opacity: 0; transition: opacity .6s; position: fixed; inset: 0; width: 100%; height: 100%; }
-#viewport { position: fixed; inset: 0; display: grid; place-items: center; }
-#stage { position: relative; width: 1672px; height: 941px; flex: none; transform: scale(var(--s, 1)); transform-origin: center; }
+#viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+#stage { position: absolute; left: 50%; top: 50%; width: 1672px; height: 941px; transform: translate(-50%, -50%) scale(var(--s, 1)); transform-origin: center; z-index: 1; }
 
 :root { --violet: #b79cff; --ink: #1c1a28; --paper: #f4f1fb; }
 
-#character { position: absolute; left: -170px; top: 20px; height: 960px; width: auto; pointer-events: none; z-index: 0; filter: drop-shadow(0 0 24px rgba(183,156,255,.35)); -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent 100%); mask-image: linear-gradient(90deg, #000 70%, transparent 100%); }
+#character { position: absolute; left: -10vh; bottom: -3vh; height: 106vh; width: auto; max-width: none; pointer-events: none; filter: drop-shadow(0 0 24px rgba(183,156,255,.35)); -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent 100%); mask-image: linear-gradient(90deg, #000 70%, transparent 100%); }
 #menu-label { position: absolute; left: 45px; top: 18px; color: #f3f0fb; font: 500 30px "Cormorant Garamond", serif; letter-spacing: .35em; }
 #menu-label i { letter-spacing: 0; opacity: .8; }
 #location { position: absolute; left: 30px; top: 105px; display: flex; gap: 8px; color: #f3f0fb; font: italic 500 22px/1.15 "Cormorant Garamond", serif; }
